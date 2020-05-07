@@ -13,13 +13,17 @@ const Pokemon = ({ data }) => {
           Go Back
         </button>
         <div className="box">
-          <Card {...data.pokemon} />
+          <a>
+            <Card {...data.pokemon} />
+          </a>
         </div>
         {data.pokemon.evolutions && (
           <div className="box">
             {data.pokemon.evolutions.map(({ id, ...pokemon }) => (
               <Link key={id} href={`/pokemon/${id}`}>
-                <Card {...pokemon} />
+                <a>
+                  <Card {...pokemon} />
+                </a>
               </Link>
             ))}
           </div>
