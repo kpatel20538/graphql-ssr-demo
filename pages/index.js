@@ -8,7 +8,9 @@ const Home = ({ data }) => (
       <div className="box">
         {data.pokemons.map(({ id,...pokemon}) => (
           <Link key={id} href={`/pokemon/${id}`}>
-            <Card {...pokemon} />
+            <a>
+              <Card {...pokemon} />
+            </a>
           </Link>
         ))}
       </div>
