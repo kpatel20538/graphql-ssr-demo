@@ -1,10 +1,7 @@
-import fetch from "isomorphic-fetch";
+import ApolloClient from "apollo-boost";
+import fetch from 'isomorphic-fetch';
 
-export const query = async (params) => {
-  const response = await fetch("https://graphql-pokemon.now.sh/", {
-    method: "POST",
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(params),
-  });
-  return response.json();
-}
+export default new ApolloClient({
+  uri: "https://graphql-pokemon.now.sh/",
+  fetch
+});

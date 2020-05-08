@@ -1,38 +1,34 @@
-import { query } from "../utils/api";
-import Link from "next/link";
-import Card from "../components/Card";
+import client from "../utils/api";
+import gql from "graphql-tag";
+import PokemonCards, {
+  POKEMON_CARD_FRAGMENT,
+} from "../components/fragments/PokemonCards";
+import PageLayout from "../components/PageLayout";
+import Section from "../components/Section";
 
-const Home = ({ data }) => (
-  <div className="section">
-    <div className="container">
-      <div className="box">
-        {data.pokemons.map(({ id,...pokemon}) => (
-          <Link key={id} href={`/pokemon/${id}`}>
-            <a>
-              <Card {...pokemon} />
-            </a>
-          </Link>
-        ))}
-      </div>
-    </div>
-  </div>
-);
+const INDEX_QUERY = gql`
+  query PokemonsQuery {
+    pokemons(first: 151) {
+      ...PokemonCardFragment
+    }
+  }
+  ${POKEMON_CARD_FRAGMENT}
+`;
 
-export async function getServerSideProps() {
+export default ({ data }) => {
+  return (
+    <PageLayout>
+      <Section>
+        <PokemonCards pokemons={data.pokemons} />
+      </Section>
+    </PageLayout>
+  );
+};
+
+export async function getStaticProps() {
   return {
-    props: await query({
-      query: `
-        query PokemonsQuery {
-          pokemons(first: 151) { 
-            id
-            name
-            image
-            types
-          }
-        }
-      `,
+    props: await client.query({
+      query: INDEX_QUERY,
     }),
   };
 }
-
-export default Home;
