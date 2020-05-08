@@ -3,42 +3,52 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FaArrowLeft } from "react-icons/fa";
 
+const NavbarBurger = ({ onClick }) => {
+  return (
+    <button className="navbar-burger" onClick={onClick}>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+  );
+};
+
+const NavBackButton = () => {
+  const { back } = useRouter();
+  return (
+    <div className="navbar-item">
+      <button className="button is-text" onClick={() => back()}>
+        <FaArrowLeft />
+      </button>
+    </div>
+  );
+};
+
+const NavPageLink = ({ href, label }) => {
+  const { pathname } = useRouter();
+
+  return (
+    <Link href={href}>
+      <a className={`navbar-item ${pathname === href ? "is-active" : ""}`}>
+        {label}
+      </a>
+    </Link>
+  );
+};
+
 const Navbar = () => {
-  const { back, pathname } = useRouter();
   const [isActive, setIsActive] = useState(false);
 
   return (
-    <nav
-      className="navbar has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
+    <nav className="navbar has-shadow">
       <div className="navbar-brand">
-        <div className="navbar-item">
-          <button className="button is-text" onClick={() => back()}>
-            <FaArrowLeft />
-          </button>
-        </div>
-        <a
-          role="button"
-          className="navbar-burger"
-          aria-label="menu"
-          aria-expanded={isActive ? "true" : "false"}
-          onClick={() => setIsActive(!isActive)}
-        >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
+        <NavBackButton />
+        <NavbarBurger onClick={() => setIsActive(!isActive)} />
       </div>
 
       <div className={`navbar-menu ${isActive ? "is-active" : ""}`}>
         <div className="navbar-start">
-          <Link href="/">
-            <a className={`navbar-item ${pathname === "/" ? "is-active" : ""}`}>
-              Home
-            </a>
-          </Link>
+          <NavPageLink href="/" label="Home" />
         </div>
       </div>
     </nav>
@@ -60,22 +70,22 @@ const Footer = () => {
   );
 };
 
-export default ({ children }) => (
-  <main>
-    <Navbar />
-    <section className="section">
-      <div className="container">{children}</div>
-    </section>
-    <Footer />
-    <style jsx>{`
-      main {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
-      section {
-        flex: 1;
-      }
-    `}</style>
-  </main>
-);
+export default ({ children }) => {
+  return (
+    <main>
+      <Navbar />
+      <div>{children}</div>
+      <Footer />
+      <style jsx>{`
+        main {
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+        }
+        div {
+          flex: 1;
+        }
+      `}</style>
+    </main>
+  );
+};
