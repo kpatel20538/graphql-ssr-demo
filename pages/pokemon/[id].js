@@ -1,4 +1,5 @@
-import { query } from "../../utils/api";
+import client from "../../utils/api";
+import gql from 'graphql-tag';
 import PokemonTitleBar, {
   POKEMON_TITLE_BAR_FRAGMENT,
 } from "../../components/fragments/PokemonTitleBar";
@@ -11,6 +12,23 @@ import PokemonCards, {
 import Figure from "../../components/Figure";
 import PageLayout from "../../components/PageLayout";
 import Section from "../../components/Section";
+
+const POKEMON_QUERY = gql`
+  query PokemonQuery($id: String) {
+    pokemon(id: $id) {
+      name
+      image           
+      ...PokemonTitleBarFragment
+      ...DataTableFragment
+      evolutions {
+        ...PokemonCardFragment
+      }
+    }
+  }
+  ${POKEMON_TITLE_BAR_FRAGMENT}
+  ${DATA_TABLE_FRAGMENT}
+  ${POKEMON_CARD_FRAGMENT}
+`;
 
 export default ({ data }) => {
   return (
@@ -40,23 +58,8 @@ export default ({ data }) => {
 
 export async function getServerSideProps({ params: { id } }) {
   return {
-    props: await query({
-      query: `
-        query PokemonQuery($id: String) {
-          pokemon(id: $id) {
-            name
-            image           
-            ...PokemonTitleBarFragment
-            ...DataTableFragment
-            evolutions {
-              ...PokemonCardFragment
-            }
-          }
-        }
-        ${POKEMON_TITLE_BAR_FRAGMENT}
-        ${DATA_TABLE_FRAGMENT}
-        ${POKEMON_CARD_FRAGMENT}
-      `,
+    props: await client.query({
+      query: POKEMON_QUERY,
       variables: { id },
     }),
   };

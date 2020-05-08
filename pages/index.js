@@ -1,9 +1,19 @@
-import { query } from "../utils/api";
+import client from "../utils/api";
+import gql from "graphql-tag";
 import PokemonCards, {
   POKEMON_CARD_FRAGMENT,
 } from "../components/fragments/PokemonCards";
 import PageLayout from "../components/PageLayout";
 import Section from "../components/Section";
+
+const INDEX_QUERY = gql`
+  query PokemonsQuery {
+    pokemons(first: 151) {
+      ...PokemonCardFragment
+    }
+  }
+  ${POKEMON_CARD_FRAGMENT}
+`;
 
 export default ({ data }) => {
   return (
@@ -17,15 +27,8 @@ export default ({ data }) => {
 
 export async function getStaticProps() {
   return {
-    props: await query({
-      query: `
-        query PokemonsQuery {
-          pokemons(first: 151) { 
-            ...PokemonCardFragment
-          }
-        }
-        ${POKEMON_CARD_FRAGMENT}
-      `,
+    props: await client.query({
+      query: INDEX_QUERY,
     }),
   };
 }
