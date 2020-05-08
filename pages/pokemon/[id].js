@@ -4,8 +4,6 @@ import Media from "../../components/Media";
 import PageLayout from "../../components/PageLayout";
 
 const Pokemon = ({ data }) => {
-  console.log(data);
-
   return (
     <PageLayout>
       <Box>
