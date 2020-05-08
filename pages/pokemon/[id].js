@@ -1,35 +1,24 @@
 import { query } from "../../utils/api";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import Card from "../../components/Card";
+import Box from "../../components/Box";
+import Media from "../../components/Media";
+import PageLayout from "../../components/PageLayout";
 
 const Pokemon = ({ data }) => {
-  const { back } = useRouter();
+  console.log(data);
 
   return (
-    <div className="section">
-      <div className="container">
-        <button className="button" onClick={() => back()}>
-          Go Back
-        </button>
-        <div className="box">
-          <a>
-            <Card {...data.pokemon} />
-          </a>
-        </div>
-        {data.pokemon.evolutions && (
-          <div className="box">
-            {data.pokemon.evolutions.map(({ id, ...pokemon }) => (
-              <Link key={id} href={`/pokemon/${id}`}>
-                <a>
-                  <Card {...pokemon} />
-                </a>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+    <PageLayout>
+      <Box>
+        <Media {...data.pokemon} />
+      </Box>
+      {data.pokemon.evolutions && (
+        <Box>
+          {data.pokemon.evolutions.map((pokemon) => (
+            <Media key={pokemon.id} {...pokemon} />
+          ))}
+        </Box>
+      )}
+    </PageLayout>
   );
 };
 

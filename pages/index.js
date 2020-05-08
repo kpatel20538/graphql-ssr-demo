@@ -1,21 +1,16 @@
 import { query } from "../utils/api";
-import Link from "next/link";
-import Card from "../components/Card";
+import Box from "../components/Box";
+import Media from "../components/Media";
+import PageLayout from "../components/PageLayout";
 
 const Home = ({ data }) => (
-  <div className="section">
-    <div className="container">
-      <div className="box">
-        {data.pokemons.map(({ id,...pokemon}) => (
-          <Link key={id} href={`/pokemon/${id}`}>
-            <a>
-              <Card {...pokemon} />
-            </a>
-          </Link>
-        ))}
-      </div>
-    </div>
-  </div>
+  <PageLayout>
+    <Box>
+      {data.pokemons.map((pokemon) => (
+        <Media key={pokemon.id} {...pokemon} />
+      ))}
+    </Box>
+  </PageLayout>
 );
 
 export async function getServerSideProps() {
